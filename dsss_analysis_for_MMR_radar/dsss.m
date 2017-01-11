@@ -34,7 +34,7 @@ hopped_sig=xor(pattern,spread_sig);
 % Modulating the hopped signal
 dsss_sig=[];
 t=[0:100];    
-fc=.1
+fc = 0.1;
 c1=cos(2*pi*fc*t);
 c2=cos(2*pi*fc*t+pi);
 for k=1:120
