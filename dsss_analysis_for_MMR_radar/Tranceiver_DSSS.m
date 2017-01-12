@@ -32,7 +32,7 @@ ylabel('Value');
 M = size(PRBS, 2);
 NFFT = 2^nextpow2(M); % Next power of 2 from length of y
 outfft = fft(PRBS,NFFT);
-f = fs/2*linspace(0,1,NFFT/2+1);
+f = fs*linspace(0,1,NFFT/2+1);
 P2 = abs(outfft/NFFT);
 P1 = P2(:,1:NFFT/2+1);
 P1(:,2:end-1) = 2*P1(:,2:end-1);
@@ -43,12 +43,25 @@ plot(f,P1)
 
 
 %%
-dsss_sig = [];
-   
-fo = 79e9;
-c1 = cos(2*pi*fo*t);
-c2 = cos(2*pi*fo*t+pi);
+clear all
+close all
+clc
 
+c_fo = 79e9;
+c_Fs = 5*c_fo;                    % Sampling frequency
+c_T = 1/c_Fs;                     % Sampling period
+c_L = 3.95e5;                   % Length of signal
+c_t = (0:c_L-1)*c_T;                % Time vector
+
+c = cos(2*pi*c_fo*c_t);          % First row wave
+c_n = 2^nextpow2(c_L);
+c_spectrum = fft(c,c_n);
+c_spectrum_mag = abs(c_spectrum/c_n);
+c_spectrum_s = c_spectrum_mag(:,1:c_n/2+1);
+c_spectrum_s(:,2:end-1) = 2*c_spectrum_s(:,2:end-1);
+plot(0:(c_Fs/c_n):(c_Fs/2-c_Fs/c_n),c_spectrum_s(1:c_n/2))
+%%
+dsss_sig = [];
 for k=1:N
     if PRBS(1,k) == 0
         dsss_sig = [dsss_sig c1];
@@ -57,10 +70,10 @@ for k=1:N
     end
 end
 
-M = size(dsss_sig, 2);
-NFFT = 2^nextpow2(M); % Next power of 2 from length of y
+dsss_size = size(dsss_sig, 2);
+NFFT = 2^nextpow2(dsss_size); % Next power of 2 from length of y
 DSSS_spectrum = fft(dsss_sig,NFFT);
-f = 158e9/2*linspace(0,1,NFFT/2+1);
+f = 81.5e9*linspace(0,1,NFFT/2+1);
 DSSS_P2 = abs(DSSS_spectrum/NFFT);
 DSSS_P1 = DSSS_P2(:,1:NFFT/2+1);
 DSSS_P1(:,2:end-1) = 2*DSSS_P1(:,2:end-1);
