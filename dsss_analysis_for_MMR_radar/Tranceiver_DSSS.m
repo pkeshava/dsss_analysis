@@ -47,7 +47,7 @@ clear all
 close all
 clc
 % PN Code Parameters
-N = 8;
+N = 32;
 PRBS = round(rand(1,N));
 fc = 1.5e9;
 Tp = N/fc;
